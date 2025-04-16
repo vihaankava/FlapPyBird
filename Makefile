@@ -2,7 +2,7 @@ default:
 	@make run
 
 run:
-	python main.py
+	python3 main.py
 
 web:
 	pygbag main.py

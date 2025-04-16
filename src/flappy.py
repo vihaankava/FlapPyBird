@@ -2,7 +2,7 @@ import asyncio
 import sys
 
 import pygame
-from pygame.locals import K_ESCAPE, K_SPACE, K_UP, KEYDOWN, QUIT
+from pygame.locals import K_ESCAPE, K_SPACE, K_UP, K_a, KEYDOWN, QUIT
 
 from .entities import (
     Background,
@@ -38,10 +38,12 @@ class Flappy:
         while True:
             self.background = Background(self.config)
             self.floor = Floor(self.config)
+            self.pipes = Pipes(self.config)
             self.player = Player(self.config)
             self.welcome_message = WelcomeMessage(self.config)
             self.game_over_message = GameOver(self.config)
-            self.pipes = Pipes(self.config)
+            self.config.game_over = self.game_over_message
+            self.config.pipes = self.pipes
             self.score = Score(self.config)
             await self.splash()
             await self.play()
@@ -98,6 +100,9 @@ class Flappy:
                 self.check_quit_event(event)
                 if self.is_tap_event(event):
                     self.player.flap()
+                elif event.type == KEYDOWN and event.key == K_a:
+                    # Toggle auto-play with 'A' key
+                    self.player.auto_play = not self.player.auto_play
 
             self.background.tick()
             self.floor.tick()
